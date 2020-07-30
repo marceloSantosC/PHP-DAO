@@ -13,5 +13,9 @@ echo Usuario::search("joao") . "<br>";
 
 $usuario = new Usuario();
 $usuario->login("root", "102030");
-echo $usuario;
+echo "$usuario<br>";
+
+$insert = new Usuario("Aluno", "@luno");
+$insert->insert();
+echo $insert;
 

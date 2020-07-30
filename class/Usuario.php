@@ -6,6 +6,11 @@ class Usuario {
     private $dessenha;
     private $dtcadastro;
 
+    public function __construct($deslogin = "", $dessenha = ""){
+        $this->deslogin = $deslogin;
+        $this->dessenha = $dessenha;
+    }
+
     public function getIdusuario(){ 
         return $this->idusuario;
     }
@@ -39,11 +44,8 @@ class Usuario {
 
         if(count($result) > 0) {
             $row = $result[0];
-
-            $this->setIdusuario($row['idusuario']);
-            $this->setDeslogin($row['deslogin']);
-            $this->setDessenha($row['dessenha']);
-            $this->setDtcadastro(new DateTime($row['dtcadastro']));
+            
+            $this->setData($row);
         }
     }
 
@@ -61,19 +63,34 @@ class Usuario {
         return json_encode($result);
     }
 
+    public function setData($data){
+        $this->setIdusuario($data['idusuario']);
+        $this->setDeslogin($data['deslogin']);
+        $this->setDessenha($data['dessenha']);
+        $this->setDtcadastro(new DateTime($data['dtcadastro']));
+    }
+
     public function login($login, $password){
         $sql = new Sql();
         $result = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGINN 
             AND dessenha = :SENHA;", array( ":LOGINN"=>$login, ":SENHA"=>$password ));
         if(count($result) > 0) {
             $row = $result[0];
+            $this->setData($row);
 
-            $this->setIdusuario($row['idusuario']);
-            $this->setDeslogin($row['deslogin']);
-            $this->setDessenha($row['dessenha']);
-            $this->setDtcadastro(new DateTime($row['dtcadastro']));
         } else {
             throw new Exception("Login e/ou senha inválidos!");
+        }
+    }
+
+    public function insert(){
+        $sql = new Sql();
+
+        $result = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PW);;", array(
+            ":LOGIN"=>$this->getDeslogin(), ":PW"=>$this->getDessenha()));
+        echo count($result);
+        if(count($result) > 0){
+            $this->setData($result[0]);
         }
     }
 
@@ -85,4 +102,5 @@ class Usuario {
             "dtcadastro"=>$this->getDtcadastro()->format("d-m-Y, H:m")
         ));
     }
+    
 }
