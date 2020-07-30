@@ -1,11 +1,8 @@
 <?php
 require_once("config.php");
 
-$dsn = "mysql:host=localhost;dbname=php7db";
-$user = "root";
+$root = new Usuario();
 
-$sql = new Sql($dsn, $user, "");
+$root->loadById(3);
 
-$usuarios = $sql->select("SELECT * FROM tb_usuarios;");
-
-echo json_encode($usuarios);
+echo $root;

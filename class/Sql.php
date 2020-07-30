@@ -2,7 +2,8 @@
 class Sql extends PDO {
     private $conn;
 
-    public function __construct($dsn, $user, $password){
+    public function __construct($dsn = "mysql:host=localhost;dbname=php7db"
+        , $user = "root", $password = ""){
         $this->conn = new PDO($dsn, $user, $password);
     }
 
@@ -12,7 +13,7 @@ class Sql extends PDO {
 
     private function setParams($statement, $params = array()){
         foreach($params as $key => $value){
-            $this->setParam($key, $value);
+            $this->setParam($statement, $key, $value);
         }
     }
 
