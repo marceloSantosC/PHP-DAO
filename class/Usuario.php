@@ -47,6 +47,36 @@ class Usuario {
         }
     }
 
+    public static function getAll(){
+        $sql = new Sql();
+        return  json_encode(
+            $sql->select("SELECT * FROM tb_usuarios ORDER BY idusuario;")
+        );
+    }
+
+    public static function search($login){
+        $sql = new Sql();
+        $result = $sql->select("SELECT * FROM tb_usuarios 
+            WHERE deslogin LIKE :SEARCH ORDER BY deslogin;", array(":SEARCH"=>"%$login%"));
+        return json_encode($result);
+    }
+
+    public function login($login, $password){
+        $sql = new Sql();
+        $result = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGINN 
+            AND dessenha = :SENHA;", array( ":LOGINN"=>$login, ":SENHA"=>$password ));
+        if(count($result) > 0) {
+            $row = $result[0];
+
+            $this->setIdusuario($row['idusuario']);
+            $this->setDeslogin($row['deslogin']);
+            $this->setDessenha($row['dessenha']);
+            $this->setDtcadastro(new DateTime($row['dtcadastro']));
+        } else {
+            throw new Exception("Login e/ou senha inválidos!");
+        }
+    }
+
     public function __toString(){
         return json_encode(array(
             "idusuario"=>$this->getIdusuario(),

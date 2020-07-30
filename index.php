@@ -5,4 +5,13 @@ $root = new Usuario();
 
 $root->loadById(3);
 
-echo $root;
+echo "$root<br>";
+
+echo Usuario::getAll() . "<br>";
+
+echo Usuario::search("joao") . "<br>";
+
+$usuario = new Usuario();
+$usuario->login("root", "102030");
+echo $usuario;
+
