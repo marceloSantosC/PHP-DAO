@@ -27,3 +27,8 @@ $update = new Usuario();
 $update->loadById(6);
 $update->update("maria", "5060100");
 echo $update;
+
+// Teste delete
+$delete = new Usuario();
+$delete->loadById(13);
+$delete->delete();
